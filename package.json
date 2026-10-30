@@ -1,0 +1,33 @@
+{
+  "name": "panel",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "PSM Panel: manage the nodes of many PSM servers from one web page",
+  "cloudflare": {
+    "label": "PSM Panel",
+    "products": ["Workers", "D1"],
+    "bindings": {
+      "ADMIN_PASSWORD": {
+        "description": "后台登录密码，至少 8 位。The admin password for the panel, 8+ characters."
+      }
+    }
+  },
+  "scripts": {
+    "build": "vite build --config web/vite.config.ts",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "4.13.7",
+    "vue": "3.5.42"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260914.1",
+    "@vitejs/plugin-vue": "6.0.9",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "wrangler": "4.131.2"
+  }
+}

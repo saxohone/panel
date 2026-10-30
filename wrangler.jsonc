@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "panel",
+  "main": "worker/src/index.ts",
+  "compatibility_date": "2026-09-01",
+  // The API and the subscription always reach the Worker; everything else is
+  // the panel's pages, built by `npm run build` into web/dist.
+  "assets": {
+    "directory": "./web/dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/sub/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "panel",
+      // No database_id: the Deploy to Cloudflare button (or `wrangler deploy`)
+      // creates the database, and the Worker creates its own tables.
+      "migrations_dir": "migrations","database_id": "971bee66-a7a2-41a1-a0ef-108f36fae457"
+    }
+  ],
+  // Run the Worker near its D1 database rather than near each visitor: a page
+  // of the panel makes several queries, each one a round trip to D1.
+  "placement": { "mode": "smart" },
+  // The daily housekeeping (old logs, tasks, samples, traffic days): 19:00
+  // UTC, 03:00 in China, whether or not any server syncs.
+  "triggers": { "crons": ["0 19 * * *"] },
+  "observability": { "enabled": true }
+  // Secrets (never in this file): ADMIN_PASSWORD (required), TOKEN_KEY (optional)
+}
